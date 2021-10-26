@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	usercontroller "flash-pos.com/flash-pos-api/controllers/user"
+	"github.com/gin-gonic/gin"
+)
 
 func InitUserRoute(rg *gin.RouterGroup) {
 	routerGroup := rg.Group("/users")
@@ -11,10 +14,6 @@ func InitUserRoute(rg *gin.RouterGroup) {
 		})
 	})
 
-	routerGroup.POST("/register", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"data": "register",
-		})
-	})
+	routerGroup.POST("/register", usercontroller.Register)
 
 }

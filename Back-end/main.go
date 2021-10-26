@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flash-pos.com/flash-pos-api/configs"
 	"flash-pos.com/flash-pos-api/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,8 @@ func main() {
 }
 
 func setUpRouter() *gin.Engine {
+
+	configs.Connection()
 
 	router := gin.Default()
 
