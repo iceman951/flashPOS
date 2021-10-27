@@ -6,6 +6,7 @@ import (
 	"flash-pos.com/flash-pos-api/configs"
 	"flash-pos.com/flash-pos-api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/matthewhartstonge/argon2"
 )
 
 func GetAll(c *gin.Context) {
@@ -76,8 +77,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	//เปรียบเทียบ password
+	ok, _ := argon2.VerifyEncoded([]byte(input.Password), []byte(user.Password))
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "รหัสผ่านไม่ถูกต้อง"})
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"success": true,
+		"success": ok,
 		"messege": user.Email + " เข้าสู่ระบบสำเร็จ",
 	})
 

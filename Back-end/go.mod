@@ -2,7 +2,10 @@ module flash-pos.com/flash-pos-api
 
 go 1.17
 
-require github.com/gin-gonic/gin v1.7.4
+require (
+	github.com/gin-gonic/gin v1.7.4
+	github.com/matthewhartstonge/argon2 v0.1.5
+)
 
 require (
 	github.com/denisenkom/go-mssqldb v0.11.0 // indirect
