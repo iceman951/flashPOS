@@ -8,12 +8,10 @@ import (
 func InitUserRoute(rg *gin.RouterGroup) {
 	routerGroup := rg.Group("/users")
 
-	routerGroup.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"data": "all users",
-		})
-	})
+	routerGroup.GET("/", usercontroller.GetAll)
 
 	routerGroup.POST("/register", usercontroller.Register)
+
+	routerGroup.POST("/login", usercontroller.Login)
 
 }

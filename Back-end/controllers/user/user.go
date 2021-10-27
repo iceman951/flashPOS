@@ -8,12 +8,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetAll(c *gin.Context) {
+	var users []models.User
+
+	configs.DB.Find(&users)
+	c.JSON(200, gin.H{
+		"success": true,
+		"messege": "ดึงข้อมูล all users สำเร็จ",
+		"data":    users,
+	})
+}
+
 func Register(c *gin.Context) {
+
 	var input InputRegister
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	user := models.User{
 		Fullname: input.Fullname,
 		Email:    input.Email,
 		Password: input.Password,
+	}
+
+	//เช็ค email ซ้ำ
+	userExist := configs.DB.Where("email = ?", input.Email).First(&user)
+	if userExist.RowsAffected == 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีผู้ใช้งานอีเมล์นี้ในระบบแล้ว"})
+		return
 	}
 
 	result := configs.DB.Debug().Create(&user)
@@ -25,7 +50,35 @@ func Register(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"message": "register success",
+		"success": true,
+		"message": "ลงทะเบียนสำเร็จ",
+	})
+}
+
+func Login(c *gin.Context) {
+	var input InputLogin
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": err.Error(),
+		})
+		return
+	}
+
+	user := models.User{
+		Email:    input.Email,
+		Password: input.Password,
+	}
+
+	//เช็คว่ามีผู้ใช้นี้ในระบบเราหรือไม่
+	userAccount := configs.DB.Where("email = ?", input.Email).First(&user)
+	if userAccount.RowsAffected < 1 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ไม่พบผู้ใช้งานนี้ในระบบ"})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"messege": user.Email + " เข้าสู่ระบบสำเร็จ",
 	})
 
 }

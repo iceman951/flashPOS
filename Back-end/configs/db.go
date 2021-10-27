@@ -12,7 +12,7 @@ var DB *gorm.DB
 
 func Connection() {
 	// dsn := os.Getenv("DATABASE_DSN")
-	dsn := "server=flash-pos-server.database.windows.net;user id=azure-admin;password=fanhin-ice319;port=1433"
+	dsn := "server=flash-pos-server.database.windows.net;user id=azure-admin;password=fanhin-ice319;port=1433;database=flas-pos-db;"
 	db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{})
 
 	if err != nil {
